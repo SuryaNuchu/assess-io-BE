@@ -16,6 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const db = require("./app/models");
+
+// connect to DB
 db.mongoose
   .connect(db.url, {
     useNewUrlParser: true,
@@ -28,11 +30,6 @@ db.mongoose
     console.log("Cannot connect to the database!", err);
     process.exit();
   });
-
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
-});
 
 require("./app/routes/job.routes")(app);
 
