@@ -12,9 +12,9 @@ npm install
 npm start
 ```
 
-### Resources 
+### References 
+
 ```
-1) https://nodejs.org/api/child_process.html
-2) https://github.com/axios/axios
-3) https://reactjs.org/docs/hooks-state.html
+https://nodejs.org/api/child_process.html
+https://github.com/OptimalBits/bull
 ```
