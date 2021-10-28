@@ -22,6 +22,7 @@ db.mongoose
   .connect(db.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: true,
   })
   .then(() => {
     console.log("Connected to the database!");

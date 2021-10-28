@@ -18,11 +18,11 @@ jobQueue.process(NUM_WORKERS, async ({ data }) => {
     let output;
     job["startedAt"] = new Date();
     if (job.extension === "cpp") {
-      output = await executeCpp(job.filepath);
+      output = await executeCpp(job.inputFilePath, job.outputFilePath);
     } else if (job.extension === "py") {
-      output = await executePy(job.filepath);
+      output = await executePy(job.inputFilePath);
     } else if (job.extension === "java") {
-      output = await executeJava(job.filepath);
+      //output = await executeJava(job.inputFilePath, job.outputFilePath);
     }
     job["completedAt"] = new Date();
     job["output"] = output;

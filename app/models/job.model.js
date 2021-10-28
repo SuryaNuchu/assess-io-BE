@@ -5,9 +5,12 @@ module.exports = (mongoose) => {
       required: true,
       enum: ["cpp", "py", "java"],
     },
-    filepath: {
+    inputFilePath: {
       type: String,
       required: true,
+    },
+    outputFilePath: {
+      type: String,
     },
     submittedAt: {
       type: Date,
