@@ -51,7 +51,7 @@ isAdmin = (req, res, next) => {
   });
 };
 
-isModerator = (req, res, next) => {
+isTeacher = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
@@ -69,13 +69,13 @@ isModerator = (req, res, next) => {
         }
 
         for (let i = 0; i < roles.length; i++) {
-          if (roles[i].name === "moderator") {
+          if (roles[i].name === "teacher") {
             next();
             return;
           }
         }
 
-        res.status(403).send({ message: "Require Moderator Role!" });
+        res.status(403).send({ message: "Require teacher Role!" });
         return;
       }
     );
@@ -85,6 +85,6 @@ isModerator = (req, res, next) => {
 const authJwt = {
   verifyToken,
   isAdmin,
-  isModerator,
+  isTeacher,
 };
 module.exports = authJwt;
