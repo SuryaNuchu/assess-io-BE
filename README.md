@@ -3,13 +3,13 @@
 ## Project setup
 
 ```
-npm install
+yarn install
 ```
 
 ### Run
 
 ```
-npm start
+yarn start
 ```
 
 ### References 
