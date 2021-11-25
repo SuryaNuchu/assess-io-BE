@@ -3,6 +3,7 @@ const Job = db.job;
 const { generateFile } = require("../services/generateFile");
 const { addJobToQueue } = require("../services/jobQueue");
 
+// Run the job
 exports.run = async (req, res) => {
   const { extension = "cpp", code, jobIdUI = "", userId } = req.body;
   if (code === undefined) {
@@ -54,6 +55,7 @@ exports.run = async (req, res) => {
   }
 };
 
+// poll for status by jobId
 exports.status = async (req, res) => {
   const jobId = req.query.id;
   if (jobId === undefined) {

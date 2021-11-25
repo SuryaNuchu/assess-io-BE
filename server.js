@@ -33,9 +33,12 @@ db.mongoose
     process.exit();
   });
 
+//routes
 require("./app/routes/job.routes")(app);
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
+require("./app/routes/question.routes")(app);
+require("./app/routes/answers.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
@@ -47,7 +50,7 @@ function initial() {
   Role.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {
       new Role({
-        name: "user",
+        name: "student",
       }).save((err) => {
         if (err) {
           console.log("error", err);
@@ -57,7 +60,7 @@ function initial() {
       });
 
       new Role({
-        name: "moderator",
+        name: "teacher",
       }).save((err) => {
         if (err) {
           console.log("error", err);
