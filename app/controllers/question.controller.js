@@ -20,8 +20,7 @@ exports.saveQuestionMetaData = async (req, res) => {
     subjectImage,
     type,
   }).save();
-  const questionMetaDataId = questionMetaData["_id"];
-  res.status(200).json({ questionMetaDataId });
+  res.status(200).json(questionMetaData);
 };
 
 // getQuestionMetaDataById
@@ -38,18 +37,18 @@ exports.getQuestionMetaDataById = async (req, res) => {
       .status(400)
       .json({ success: false, error: "couldn't find question meta data" });
   }
-  return res.status(200).json({ success: true, questionMetaData });
+  return res.status(200).json(questionMetaData);
 };
 
 // getAllQuestionsMetaData
 exports.getAllQuestionsMetaData = async (req, res) => {
-  const questionsMetaData = await QuestionMetaData.findAll();
+  const questionsMetaData = await QuestionMetaData.find();
   if (questionsMetaData === undefined) {
     return res
       .status(400)
       .json({ success: false, error: "couldn't find question meta data" });
   }
-  return res.status(200).json({ success: true, questionsMetaData });
+  return res.status(200).json(questionsMetaData);
 };
 
 // deleteQuestionMetaData
@@ -68,7 +67,7 @@ exports.deleteQuestionMetaData = async (req, res) => {
       .status(400)
       .json({ success: false, error: "couldn't find question meta data" });
   }
-  return res.status(200).json({ success: true, questionMetaData });
+  return res.status(200).json(questionMetaData);
 };
 
 // patchQuestionMetaData
@@ -82,20 +81,37 @@ exports.patchQuestionMetaData = async (req, res) => {
     subjectImage,
     type,
   } = req.body;
-  const questionMetaData = new QuestionMetaData({
-    _id: id,
-    name,
-    subjectCode,
-    branch,
-    lastFiveWeightedAvg,
-    subjectImage,
-    type,
-  });
 
-  const patchedQuestionMetaData = await QuestionMetaData.findOneAndUpdate(
-    questionMetaData
-  );
-  res.status(200).json(patchedQuestionMetaData);
+  QuestionMetaData.findByIdAndUpdate(
+    id,
+    {
+      name,
+      subjectCode,
+      branch,
+      lastFiveWeightedAvg,
+      subjectImage,
+      type,
+    },
+    { new: true }
+  )
+    .then((note) => {
+      if (!note) {
+        return res.status(404).send({
+          message: "Question Meta Data not found with id " + id,
+        });
+      }
+      res.send(note);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Question Meta Data not found with id " + id,
+        });
+      }
+      return res.status(500).send({
+        message: "Error updating Question Meta Data with id " + id,
+      });
+    });
 };
 
 // saveQuestion
@@ -109,8 +125,7 @@ exports.saveQuestion = async (req, res) => {
     createdOn,
     complexity,
   }).save();
-  const questionId = question["_id"];
-  res.status(200).json({ questionId });
+  res.status(200).json(question);
 };
 
 // getQuestionById
@@ -127,18 +142,18 @@ exports.getQuestionById = async (req, res) => {
       .status(400)
       .json({ success: false, error: "couldn't find question data" });
   }
-  return res.status(200).json({ success: true, question });
+  return res.status(200).json(question);
 };
 
 // getAllQuestions
 exports.getAllQuestions = async (req, res) => {
-  const questions = await Question.findAll();
+  const questions = await Question.find();
   if (question === undefined) {
     return res
       .status(400)
       .json({ success: false, error: "couldn't find question data" });
   }
-  return res.status(200).json({ success: true, questions });
+  return res.status(200).json(questions);
 };
 
 // deleteQuestion
@@ -155,7 +170,7 @@ exports.deleteQuestion = async (req, res) => {
       .status(400)
       .json({ success: false, error: "couldn't find question data" });
   }
-  return res.status(200).json({ success: true, question });
+  return res.status(200).json(question);
 };
 
 // patchQuestion
@@ -169,15 +184,35 @@ exports.patchQuestion = async (req, res) => {
     createdOn,
     complexity,
   } = req.body;
-  const question = new Question({
-    _id: id,
-    type,
-    components,
-    time,
-    createdBy,
-    createdOn,
-    complexity,
-  });
-  const questionId = await Question.findOneAndUpdate(question);
-  res.status(200).json({ questionId });
+
+  Question.findByIdAndUpdate(
+    id,
+    {
+      type,
+      components,
+      time,
+      createdBy,
+      createdOn,
+      complexity,
+    },
+    { new: true }
+  )
+    .then((note) => {
+      if (!note) {
+        return res.status(404).send({
+          message: "Note not found with id " + req.params.noteId,
+        });
+      }
+      res.send(note);
+    })
+    .catch((err) => {
+      if (err.kind === "ObjectId") {
+        return res.status(404).send({
+          message: "Note not found with id " + req.params.noteId,
+        });
+      }
+      return res.status(500).send({
+        message: "Error updating note with id " + req.params.noteId,
+      });
+    });
 };
