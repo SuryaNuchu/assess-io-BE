@@ -4,7 +4,7 @@ module.exports = (mongoose) => {
       type: String,
       required: true,
     },
-    subjectCode: {
+    code: {
       type: String,
       required: true,
     },
@@ -16,7 +16,10 @@ module.exports = (mongoose) => {
       type: Array,
       required: true,
     },
-    subjectImage: {
+    image: {
+      type: String,
+    },
+    subjectId: {
       type: String,
     },
     type: {

@@ -6,19 +6,21 @@ const Question = db.question;
 exports.saveQuestionMetaData = async (req, res) => {
   const {
     name,
-    subjectCode,
+    code,
     branch,
     lastFiveWeightedAvg,
-    subjectImage,
+    image,
     type,
+    subjectId,
   } = req.body;
   const questionMetaData = await new QuestionMetaData({
     name,
-    subjectCode,
+    code,
     branch,
     lastFiveWeightedAvg,
-    subjectImage,
+    image,
     type,
+    subjectId,
   }).save();
   res.status(200).json(questionMetaData);
 };
@@ -42,13 +44,28 @@ exports.getQuestionMetaDataById = async (req, res) => {
 
 // getAllQuestionsMetaData
 exports.getAllQuestionsMetaData = async (req, res) => {
-  const questionsMetaData = await QuestionMetaData.find();
-  if (questionsMetaData === undefined) {
-    return res
-      .status(400)
-      .json({ success: false, error: "couldn't find question meta data" });
+  const subjectId = req.query.subjectId;
+  const type = req.query.type;
+  if (subjectId) {
+    const questionsMetaData = await QuestionMetaData.find({
+      subjectId: subjectId,
+      type: type,
+    });
+    if (questionsMetaData === undefined) {
+      return res
+        .status(400)
+        .json({ success: false, error: "couldn't find question meta data" });
+    }
+    return res.status(200).json(questionsMetaData);
+  } else {
+    const questionsMetaData = await QuestionMetaData.find({ type: type });
+    if (questionsMetaData === undefined) {
+      return res
+        .status(400)
+        .json({ success: false, error: "couldn't find question meta data" });
+    }
+    return res.status(200).json(questionsMetaData);
   }
-  return res.status(200).json(questionsMetaData);
 };
 
 // deleteQuestionMetaData
@@ -136,6 +153,7 @@ exports.getQuestionById = async (req, res) => {
       .status(400)
       .json({ success: false, error: "missing id query param" });
   }
+
   const question = await Question.findById(questionMetaDataId);
   if (question === undefined) {
     return res
