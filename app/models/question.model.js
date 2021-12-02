@@ -1,31 +1,30 @@
 module.exports = (mongoose) => {
-  var schema = mongoose.Schema({
-    type: {
-      type: String,
-      required: true,
-      enum: ["mcq", "rearrange", "coding", "fillintheblank"],
+  var schema = mongoose.Schema(
+    {
+      type: {
+        type: String,
+        required: true,
+        enum: ["mcq", "rearrange", "coding", "fillintheblank"],
+      },
+      components: {
+        type: Object,
+        required: true,
+      },
+      time: {
+        type: Date,
+      },
+      createdBy: {
+        type: String,
+        required: true,
+      },
+      complexity: {
+        type: String,
+        required: true,
+        enum: ["easy", "medium", "hard"],
+      },
     },
-    components: {
-      type: Object,
-      required: true,
-    },
-    time: {
-      type: Date,
-    },
-    createdBy: {
-      type: String,
-      required: true,
-    },
-    createdOn: {
-      type: Date,
-      required: true,
-    },
-    complexity: {
-      type: String,
-      required: true,
-      enum: ["easy", "medium", "hard"],
-    },
-  });
+    { timestamps: true }
+  );
 
   schema.method("toJSON", function () {
     const { __v, _id, ...object } = this.toObject();
