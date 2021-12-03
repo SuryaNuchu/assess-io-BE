@@ -33,13 +33,24 @@ exports.getQuestionMetaDataById = async (req, res) => {
       .status(400)
       .json({ success: false, error: "missing id query param" });
   }
-  const questionMetaData = await QuestionMetaData.findById(questionMetaDataId);
-  if (questionMetaData === undefined) {
+  const unitData = await QuestionMetaData.findById(questionMetaDataId);
+  if (unitData === undefined) {
     return res
       .status(400)
       .json({ success: false, error: "couldn't find question meta data" });
+  } else {
+    const subjectData = await QuestionMetaData.findById({
+      _id: unitData.subjectId,
+    });
+    if (subjectData === undefined) {
+      return res
+        .status(400)
+        .json({ success: false, error: "couldn't find question meta data" });
+    }
+    return res
+      .status(200)
+      .json({ subjectData: subjectData, unitData: unitData });
   }
-  return res.status(200).json(questionMetaData);
 };
 
 // getAllQuestionsMetaData

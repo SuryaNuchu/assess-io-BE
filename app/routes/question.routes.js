@@ -5,6 +5,7 @@ module.exports = (app) => {
 
   // question metadata routes
   router.get("/metadata", questionController.getAllQuestionsMetaData);
+  router.get("/metadataById", questionController.getQuestionMetaDataById);
   router.delete("/metadata", questionController.deleteQuestionMetaData);
   router.post("/metadata", questionController.saveQuestionMetaData);
   router.patch("/metadata", questionController.patchQuestionMetaData);
