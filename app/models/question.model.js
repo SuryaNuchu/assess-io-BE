@@ -6,6 +6,14 @@ module.exports = (mongoose) => {
         required: true,
         enum: ["mcq", "rearrange", "coding", "fillintheblank"],
       },
+      subjectData: {
+        type: Object,
+        required: true,
+      },
+      unitData: {
+        type: Object,
+        required: true,
+      },
       components: {
         type: Object,
         required: true,

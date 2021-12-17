@@ -144,7 +144,16 @@ exports.patchQuestionMetaData = async (req, res) => {
 
 // saveQuestion
 exports.saveQuestion = async (req, res) => {
-  const { type, components, time, createdBy, createdOn, complexity } = req.body;
+  const {
+    type,
+    components,
+    time,
+    createdBy,
+    createdOn,
+    complexity,
+    unitData,
+    subjectData,
+  } = req.body;
   const question = await new Question({
     type,
     components,
@@ -152,6 +161,8 @@ exports.saveQuestion = async (req, res) => {
     createdBy,
     createdOn,
     complexity,
+    subjectData,
+    unitData,
   }).save();
   res.status(200).json(question);
 };
@@ -176,13 +187,25 @@ exports.getQuestionById = async (req, res) => {
 
 // getAllQuestions
 exports.getAllQuestions = async (req, res) => {
-  const questions = await Question.find();
-  if (question === undefined) {
-    return res
-      .status(400)
-      .json({ success: false, error: "couldn't find question data" });
+  const unitId = req.query.unitId;
+
+  if (unitId === undefined) {
+    const questions = await Question.find();
+    if (questions === undefined) {
+      return res
+        .status(400)
+        .json({ success: false, error: "couldn't find question data" });
+    }
+    return res.status(200).json(questions);
+  } else {
+    const questions = await Question.find({ "unitData.id": unitId });
+    if (questions === undefined) {
+      return res
+        .status(400)
+        .json({ success: false, error: "couldn't find question data" });
+    }
+    return res.status(200).json(questions);
   }
-  return res.status(200).json(questions);
 };
 
 // deleteQuestion
@@ -245,3 +268,6 @@ exports.patchQuestion = async (req, res) => {
       });
     });
 };
+
+// getQuestionsByUnitId
+exports.getQuestionsByUnitId = async (req, res) => {};
