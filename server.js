@@ -2,6 +2,11 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+require("dotenv").config();
 
 var corsOptions = {
   origin: "http://localhost:3000",
@@ -40,10 +45,23 @@ require("./app/routes/user.routes")(app);
 require("./app/routes/question.routes")(app);
 require("./app/routes/answers.routes")(app);
 
+// socket
+const SOCKET_PORT = process.env.SOCKET_PORT || 8085;
+io.on("connection", (socket) => {
+  socket.on("code", (arg) => {
+    console.log(arg);
+  });
+  socket.emit("result", "succesfull");
+});
+
+server.listen(SOCKET_PORT, () => {
+  console.log(`Socket is running on port ${SOCKET_PORT}.`);
+});
+
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+  console.log(`Http Server is running on port ${PORT}.`);
 });
 
 function initial() {
