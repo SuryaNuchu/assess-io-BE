@@ -5,12 +5,18 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
 require("dotenv").config();
 
+const { runCode } = require("./app/services/glotio");
 var corsOptions = {
   origin: "http://localhost:3000",
 };
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
 
 app.use(cors(corsOptions));
 
@@ -48,10 +54,16 @@ require("./app/routes/answers.routes")(app);
 // socket
 const SOCKET_PORT = process.env.SOCKET_PORT || 8085;
 io.on("connection", (socket) => {
-  socket.on("code", (arg) => {
-    console.log(arg);
+  socket.on("code", async (req) => {
+    const { fileName, content, langSelected } = JSON.parse(req);
+    console.log(fileName, JSON.stringify(content));
+    const result = await runCode(
+      fileName,
+      JSON.stringify(content),
+      langSelected
+    );
+    socket.emit("result", result);
   });
-  socket.emit("result", "succesfull");
 });
 
 server.listen(SOCKET_PORT, () => {
