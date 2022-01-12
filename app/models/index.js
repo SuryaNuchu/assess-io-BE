@@ -13,5 +13,6 @@ db.ROLES = ["student", "admin", "teacher"];
 db.question = require("./question.model")(mongoose);
 db.answers = require("./answers.model")(mongoose);
 db.test = require("./test.model")(mongoose);
+db.studentBatch = require("./studentBatch.model")(mongoose);
 db.questionMetaData = require("./questionMetaData.model")(mongoose);
 module.exports = db;

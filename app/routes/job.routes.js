@@ -3,7 +3,7 @@ module.exports = (app) => {
 
   var router = require("express").Router();
 
-  router.post("/", jobController.run);
+  router.post("/", jobController.runCode);
   router.get("/status", jobController.status);
 
   app.use("/api/job", router);

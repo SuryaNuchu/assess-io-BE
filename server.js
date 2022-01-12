@@ -50,17 +50,18 @@ require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/question.routes")(app);
 require("./app/routes/answers.routes")(app);
+require("./app/routes/studentService.routes")(app);
 
 // socket
 const SOCKET_PORT = process.env.SOCKET_PORT || 8085;
 io.on("connection", (socket) => {
   socket.on("code", async (req) => {
-    const { fileName, content, langSelected } = JSON.parse(req);
-    console.log(fileName, JSON.stringify(content));
+    const { fileName, content, langSelected, input } = JSON.parse(req);
     const result = await runCode(
       fileName,
       JSON.stringify(content),
-      langSelected
+      langSelected,
+      input
     );
     socket.emit("result", result);
   });

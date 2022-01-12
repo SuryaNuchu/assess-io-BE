@@ -1,22 +1,43 @@
-const superagent = require("superagent");
+const axios = require("axios").default;
 
-const runCode = async (fileName, code, lang) => {
+const runCode = async (fileName, code, lang, input) => {
+  let imageName = "";
+  switch (lang) {
+    case "python":
+      imageName = "glot/python:latest";
+      break;
+    case "java":
+      imageName = "glot/java:latest";
+      break;
+    case "cpp":
+      imageName = "glot/clang:latest";
+      break;
+    default:
+      break;
+  }
   try {
-    const response = await superagent
-      .post("http://localhost:8088/run")
-      .send({
-        image: "glot/python:latest",
-        language: lang,
-        files: [
-          {
-            name: fileName,
-            content: code,
-          },
-        ],
-      })
-      .set("Authorization", "my-token")
-      .set("Content-type", "application/json");
-    return response;
+    const response = await axios({
+      method: "POST",
+      url: "http://localhost:8088/run",
+      headers: {
+        "X-Access-Token": "assessiosuryanuchu",
+        "Content-type": "application/json",
+      },
+      data: {
+        image: imageName,
+        payload: {
+          language: lang,
+          files: [
+            {
+              name: fileName,
+              content: JSON.parse(code),
+            },
+          ],
+          stdin: input,
+        },
+      },
+    });
+    return response.data;
   } catch (err) {
     return { error: err };
   }

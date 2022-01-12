@@ -3,6 +3,8 @@ const Job = db.job;
 const { generateFile } = require("../services/generateFile");
 const { addJobToQueue } = require("../services/jobQueue");
 
+const { runCode } = require("../services/glotio");
+
 // Run the job
 exports.run = async (req, res) => {
   const { extension = "cpp", code, jobIdUI = "", userId } = req.body;
@@ -68,6 +70,13 @@ exports.status = async (req, res) => {
     return res.status(400).json({ success: false, error: "couldn't find job" });
   }
   return res.status(200).json({ success: true, job });
+};
+
+// poll for status by jobId
+exports.runCode = async (req, res) => {
+  const { fileName, content, langSelected } = req.body;
+  const result = await runCode(fileName, JSON.stringify(content), langSelected);
+  return res.status(200).json(result);
 };
 
 // Update a note identified by the noteId in the request
