@@ -106,7 +106,6 @@ function initial() {
         if (err) {
           console.log("error", err);
         }
-
         console.log("added 'admin' to roles collection");
       });
     }

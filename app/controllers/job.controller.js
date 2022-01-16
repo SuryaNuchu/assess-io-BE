@@ -72,7 +72,7 @@ exports.status = async (req, res) => {
   return res.status(200).json({ success: true, job });
 };
 
-// poll for status by jobId
+// run code
 exports.runCode = async (req, res) => {
   const { fileName, content, langSelected } = req.body;
   const result = await runCode(fileName, JSON.stringify(content), langSelected);

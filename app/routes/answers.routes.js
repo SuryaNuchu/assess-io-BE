@@ -1,10 +1,11 @@
+const { authJwt } = require("../middlewares");
 module.exports = (app) => {
   const answersController = require("../controllers/answers.controller");
 
   var router = require("express").Router();
 
-  router.get("/", answersController.getAnswers);
-  router.post("/", answersController.saveAnswers);
+  router.get("/", [authJwt.verifyToken], answersController.getAnswers);
+  router.post("/", [authJwt.verifyToken], answersController.saveAnswers);
 
   app.use("/api/answers", router);
 };
