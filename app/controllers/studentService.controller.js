@@ -63,7 +63,7 @@ exports.deleteBatchInfo = async (req, res) => {
 exports.patchBatchInfo = async (req, res) => {
   const { id, name, createdBy, additionalInfo, studentsInfo } = req.body;
 
-  Question.findByIdAndUpdate(
+  StudentBatch.findByIdAndUpdate(
     id,
     {
       name,

@@ -6,6 +6,17 @@ const Role = db.role;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
+exports.verifyToken = (req, res) => {
+  const token = req.body.token;
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorized!" });
+    } else {
+      return res.status(200).send({ message: "Authorized!!" });
+    }
+  });
+};
+
 exports.signup = (req, res) => {
   const user = new User({
     username: req.body.username,
@@ -107,3 +118,6 @@ exports.signin = (req, res) => {
       });
     });
 };
+
+
+
