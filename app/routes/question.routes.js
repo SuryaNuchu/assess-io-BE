@@ -32,7 +32,7 @@ module.exports = (app) => {
   );
 
   // question routes
-  router.get("/", [authJwt.verifyToken], questionController.getAllQuestions);
+  router.get("/", questionController.getAllQuestions);
   router.post("/", [authJwt.verifyToken], questionController.saveQuestion);
   router.delete("/", [authJwt.verifyToken], questionController.deleteQuestion);
   router.patch("/", [authJwt.verifyToken], questionController.patchQuestion);

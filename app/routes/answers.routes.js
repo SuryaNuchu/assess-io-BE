@@ -5,7 +5,7 @@ module.exports = (app) => {
   var router = require("express").Router();
 
   router.get("/", [authJwt.verifyToken], answersController.getAnswers);
-  router.post("/", [authJwt.verifyToken], answersController.saveAnswers);
+  router.post("/", answersController.saveAnswers);
 
   app.use("/api/answers", router);
 };

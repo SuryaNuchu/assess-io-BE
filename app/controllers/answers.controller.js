@@ -1,5 +1,7 @@
 const db = require("../models");
 const Answers = db.answers;
+const AnswersJob = db.answersJob;
+const evaluateAnswers = require("../services/evaluateAnswers");
 
 exports.saveAnswers = async (req, res) => {
   const { components, userId, startedOn, endedOn, testId } = req.body;
@@ -11,7 +13,10 @@ exports.saveAnswers = async (req, res) => {
     testId,
   }).save();
   const answersId = answers["_id"];
-  res.status(200).json({ answersId });
+  const answerJob = await AnswersJob({ answersId, status: "pending" }).save();
+  evaluateAnswers.addAnswersJobToQueue(answerJob["_id"]);
+  const answerJobId = answerJob["_id"];
+  res.status(200).json({ answerJobId });
 };
 
 exports.getAnswers = async (req, res) => {

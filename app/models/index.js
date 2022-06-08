@@ -15,4 +15,6 @@ db.answers = require("./answers.model")(mongoose);
 db.test = require("./test.model")(mongoose);
 db.studentBatch = require("./studentBatch.model")(mongoose);
 db.questionMetaData = require("./questionMetaData.model")(mongoose);
+db.exam = require("./exam.model")(mongoose);
+db.answersJob = require("./answersJob.model")(mongoose);
 module.exports = db;

@@ -1,6 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 
+const Queue = require("bull");
+const QueueMQ = require("bullmq").Queue;
+const { createBullBoard } = require("@bull-board/api");
+const { BullAdapter } = require("@bull-board/api/bullAdapter");
+const { BullMQAdapter } = require("@bull-board/api/bullMQAdapter");
+const { ExpressAdapter } = require("@bull-board/express");
+
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
@@ -8,17 +15,39 @@ const { Server } = require("socket.io");
 require("dotenv").config();
 
 const { runCode } = require("./app/services/glotio");
-var corsOptions = {
-  origin: "http://localhost:3000",
-};
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, DELETE, OPTIONS, PATCH"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
 const io = new Server(server, {
   cors: {
+    // origin: "http://54.175.169.26:80",
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
 
-app.use(cors(corsOptions));
+// bull queue UI
+const JobRunnerQueue = new Queue("job-runner-queue", {
+  redis: { port: 6379, host: "127.0.0.1" },
+});
+
+const serverAdapter = new ExpressAdapter();
+
+const { addQueue, removeQueue, setQueues, replaceQueues } = createBullBoard({
+  queues: [new BullAdapter(JobRunnerQueue)],
+  serverAdapter: serverAdapter,
+});
+
+serverAdapter.setBasePath("/admin/queues");
+app.use("/admin/queues", serverAdapter.getRouter());
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -45,12 +74,13 @@ db.mongoose
   });
 
 //routes
-require("./app/routes/job.routes")(app);
+// require("./app/routes/job.routes")(app);
 require("./app/routes/auth.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/question.routes")(app);
 require("./app/routes/answers.routes")(app);
 require("./app/routes/studentService.routes")(app);
+require("./app/routes/exam.routes")(app);
 
 // socket
 const SOCKET_PORT = process.env.SOCKET_PORT || 8085;
