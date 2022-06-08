@@ -23,9 +23,9 @@ jobQueue.process(NUM_WORKERS, async ({ data }) => {
     let codingAnsCount = 0;
     answersJob["startedAt"] = new Date();
     const answer = await Answers.findById(answersJob.answersId);
-    const exam = await Exam.find({ examCode: answer.testId });
+    const exam = await Exam.findOne({ examCode: answer.testId });
     const questionIdVsAnswers = [];
-    exam[0].questions.forEach((q) => {
+    exam.questions.forEach((q) => {
       questionIdVsAnswers[q.id] = { type: q.type, components: q.components };
     });
 
@@ -63,13 +63,13 @@ jobQueue.process(NUM_WORKERS, async ({ data }) => {
     answersJob["status"] = "success";
     answersJob["examCode"] = answer.testId;
     answersJob["userId"] = answer.userId;
-    console.log("Saved");
     await answersJob.save();
     exam.studentsInfo.forEach((s) => {
-      if (s["exam"] === answer["userId"]) {
+      if (s["id"].localeCompare(answer["userId"]) === 0) {
         s["result"] = { mcqPoints: mcqPoints, codingPoints: codingPoints };
       }
     });
+    exam.markModified("studentsInfo");
     await exam.save();
     return true;
   } catch (err) {
