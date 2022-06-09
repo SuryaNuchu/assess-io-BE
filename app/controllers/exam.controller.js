@@ -62,6 +62,23 @@ exports.getExamById = async (req, res) => {
       .json({ success: false, error: "missing id query param" });
   }
 
+  const examInfo = await Exam.findById(examCode);
+  if (examInfo === undefined) {
+    return res
+      .status(400)
+      .json({ success: false, error: "couldn't find exam info" });
+  }
+  return res.status(200).json(examInfo);
+};
+
+exports.getExamByExamcode = async (req, res) => {
+  const examCode = req.query.id;
+  if (examCode === undefined) {
+    return res
+      .status(400)
+      .json({ success: false, error: "missing id query param" });
+  }
+
   const examInfo = await Exam.find({ examCode: examCode });
   if (examInfo[0] === undefined) {
     return res

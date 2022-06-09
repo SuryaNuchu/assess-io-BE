@@ -66,7 +66,12 @@ jobQueue.process(NUM_WORKERS, async ({ data }) => {
     await answersJob.save();
     exam.studentsInfo.forEach((s) => {
       if (s["id"].localeCompare(answer["userId"]) === 0) {
-        s["result"] = { mcqPoints: mcqPoints, codingPoints: codingPoints };
+        s["result"] = {
+          mcqPoints: mcqPoints,
+          codingPoints: codingPoints,
+          totalPoints: mcqPoints + codingPoints,
+          totalQuestions: exam.questions.length,
+        };
       }
     });
     exam.markModified("studentsInfo");

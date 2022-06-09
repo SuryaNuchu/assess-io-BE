@@ -7,6 +7,7 @@ module.exports = (app) => {
   // question metadata routes
   router.get("/", [authJwt.verifyToken], examController.getAllExams);
   router.get("/examId", examController.getExamById);
+  router.get("/examCode", examController.getExamByExamcode);
   router.post("/", [authJwt.verifyToken], examController.saveExam);
   app.use("/api/exam", router);
 };
