@@ -28,15 +28,15 @@ app.use((req, res, next) => {
 
 const io = new Server(server, {
   cors: {
-    // origin: "http://54.175.169.26:80",
-    origin: "http://localhost:3000",
+    origin: "http://164.92.157.121:80",
+    // origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
 
 // bull queue UI
 const JobRunnerQueue = new Queue("job-runner-queue", {
-  redis: { port: 6379, host: "127.0.0.1" },
+  redis: { port: 6379, host: "164.92.157.121" },
 });
 
 const serverAdapter = new ExpressAdapter();
@@ -54,6 +54,11 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+//expose public folder
+app.get("/public/*", (req, res) => {
+  handle(req, res);
+});
 
 const db = require("./app/models");
 const Role = db.role;

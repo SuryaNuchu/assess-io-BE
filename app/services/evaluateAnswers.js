@@ -1,6 +1,8 @@
 const Queue = require("bull");
 
-const jobQueue = new Queue("job-runner-queue");
+const jobQueue = new Queue("job-runner-queue", {
+  redis: { port: 6379, host: "164.92.157.121" },
+});
 const NUM_WORKERS = 5;
 
 const { runCode } = require("./glotio");

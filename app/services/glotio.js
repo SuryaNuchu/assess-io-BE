@@ -18,7 +18,7 @@ const runCode = async (fileName, code, lang, input) => {
   try {
     const response = await axios({
       method: "POST",
-      url: "http://localhost:8088/run",
+      url: "http://164.92.157.121:8088/run",
       headers: {
         "X-Access-Token": "assessiosuryanuchu",
         "Content-type": "application/json",
